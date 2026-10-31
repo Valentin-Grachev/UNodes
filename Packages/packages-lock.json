@@ -219,8 +219,8 @@
       },
       "url": "https://packages.unity.com"
     },
-    "com.unodes.providers": {
-      "version": "file:com.unodes.providers",
+    "com.unodes": {
+      "version": "file:com.unodes",
       "depth": 0,
       "source": "embedded",
       "dependencies": {}
