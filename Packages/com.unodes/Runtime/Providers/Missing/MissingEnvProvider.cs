@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 using UNodes.Project;
 
-namespace UNodes.Providers.Test
+namespace UNodes.Providers.Missing
 {
     public class MissingEnvProvider : Env.Provider
     {

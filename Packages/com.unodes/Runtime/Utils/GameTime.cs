@@ -38,7 +38,7 @@ namespace UNodes
         }
 
 
-        public static void Update()
+        public static void FixedUpdate()
         {
             if (Time.unscaledTime - _lastUnscaledSecondPassTime > 1f)
             {
@@ -54,6 +54,7 @@ namespace UNodes
                 OnSecondTick?.Invoke();
             }
         }
+
 
 
         public static void AddPause()

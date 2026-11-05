@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UNodes.Project;
 
 
-namespace UNodes.Providers.Test
+namespace UNodes.Providers.Missing
 {
     public class MissingPaymentsProvider : Payments.Provider
     {

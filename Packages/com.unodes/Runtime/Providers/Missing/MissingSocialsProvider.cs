@@ -1,6 +1,6 @@
 using System;
 
-namespace UNodes.Providers.Test
+namespace UNodes.Providers.Missing
 {
     public class MissingSocialsProvider : Socials.Provider
     {

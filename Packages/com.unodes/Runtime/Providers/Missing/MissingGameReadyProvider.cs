@@ -1,7 +1,6 @@
 using System;
-using UnityEngine;
 
-namespace UNodes.Providers.Test
+namespace UNodes.Providers.Missing
 {
     public class MissingGameReadyProvider : GameReady.Provider
     {

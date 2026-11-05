@@ -37,23 +37,30 @@ namespace UNodes.Providers
             _cloudAutosaveIntervalSec.value : float.PositiveInfinity;
 
         public Env.Provider EnvProvider => _envProvider.enabled ? 
-            _envProvider.value : gameObject.AddComponent<MissingEnvProvider>();
+            _envProvider.value : GetOrCreateProvider<MissingEnvProvider>();
 
         public Ads.Provider AdsProvider => _adsProvider.enabled ? 
-            _adsProvider.value : gameObject.AddComponent<MissingAdsProvider>();
+            _adsProvider.value : GetOrCreateProvider<MissingAdsProvider>();
 
         public Socials.Provider SocialsProvider => _socialsProvider.enabled ?
-            _socialsProvider.value : gameObject.AddComponent<MissingSocialsProvider>();
+            _socialsProvider.value : GetOrCreateProvider<MissingSocialsProvider>();
 
         public Payments.Provider PaymentsProvider => _paymentsProvider.enabled ? 
-            _paymentsProvider.value : gameObject.AddComponent<MissingPaymentsProvider>();
+            _paymentsProvider.value : GetOrCreateProvider<MissingPaymentsProvider>();
 
         public GameReady.Provider GameReadyProvider => _gameReadyProvider.enabled ?
-            _gameReadyProvider.value : gameObject.AddComponent<MissingGameReadyProvider>();
+            _gameReadyProvider.value : GetOrCreateProvider<MissingGameReadyProvider>();
 
         public CloudSaves.Provider CloudSavesProvider => _cloudSavesProvider.enabled ? 
-            _cloudSavesProvider.value : gameObject.AddComponent<MissingCloudSavesProvider>();
+            _cloudSavesProvider.value : GetOrCreateProvider<MissingCloudSavesProvider>();
 
+
+
+        private TProvider GetOrCreateProvider<TProvider>() where TProvider : CommonProvider
+        {
+            var provider = gameObject.GetComponent<TProvider>();
+            return provider != null ? provider : gameObject.AddComponent<TProvider>();
+        }
 
 
     }

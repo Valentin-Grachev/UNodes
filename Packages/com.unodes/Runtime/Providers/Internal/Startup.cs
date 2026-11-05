@@ -11,17 +11,28 @@ namespace UNodes
         public static event Action OnInitialized;
         public static bool IsInitialized { get; private set; } = false;
 
+        private static bool _startupIsCreated = false;
 
         [SerializeField] private EnvKey _editorConfigurationKey;
         [SerializeField] private EnvKey _buildConfigurationKey;
         [Space]
         [SerializeField] private List<ProviderConfiguration> _configurations;
 
-        private const float INF = 10e6f;
 
 
+        private void Awake()
+        {
+            if (_startupIsCreated)
+            {
+                Destroy(gameObject);
+                return;
+            }
 
-        private void Awake() => Initialize();
+            DontDestroyOnLoad(gameObject);
+            _startupIsCreated = true;
+
+            Initialize();
+        }
 
 
         public void Initialize()
@@ -32,6 +43,8 @@ namespace UNodes
             var configuration = _configurations.Find
                 (configuration => configuration.EnvProvider.EnvKey == configurationKey);
 
+            if (configuration == null)
+                throw new Exception($"[Startup] Configuration with key \"{configurationKey}\" doesn't exist!");
 
             Saves.SetLocalAutosaveTimeInterval(configuration.LocalAutosaveIntervalSec);
             Saves.SetCloudAutosaveTimeInterval(configuration.CloudAutosaveIntervalSec);
@@ -105,12 +118,13 @@ namespace UNodes
             }
         }
 
-        private void Update()
+
+        private void FixedUpdate()
         {
             if (!IsInitialized) return;
 
-            Saves.Update();
-            GameTime.Update();
+            Saves.FixedUpdate();
+            GameTime.FixedUpdate();
         }
 
 

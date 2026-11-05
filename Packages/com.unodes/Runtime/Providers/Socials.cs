@@ -26,6 +26,8 @@ namespace UNodes
 
         public static bool IsSupportInvite => _provider.IsSupportInvite;
         public static bool IsSupportRateGame => _provider.IsSupportRateGame;
+        public static bool IsSupportOpenUrl => _provider.IsSupportOpenUrl;
+
 
         public static void Invite() => _provider.Invite();
         public static void RateGame() => _provider.RateGame();

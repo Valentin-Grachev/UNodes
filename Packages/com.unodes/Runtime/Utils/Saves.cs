@@ -39,7 +39,6 @@ namespace UNodes
             }
 
             SaveData.RestoreFromSaveData(saveData);
-            SaveData.RestoreFromSaveData(saveData);
         }
 
 
@@ -57,6 +56,9 @@ namespace UNodes
             PlayerPrefs.Save();
 
             CloudSaves.Commit(saveDataString, onHandled);
+
+            _lastCloudSaveTime = Time.unscaledTime;
+            _cloudAutosaveTimeIntervalSec = Time.unscaledTime;
         }
 
 
@@ -90,7 +92,7 @@ namespace UNodes
         }
 
 
-        public static void Update() => UpdateAutosave();
+        public static void FixedUpdate() => UpdateAutosave();
 
         private static void UpdateAutosave()
         {
@@ -108,8 +110,6 @@ namespace UNodes
             {
                 var saveDataString = CreateSaveDataString();
                 CloudSaves.Commit(saveDataString);
-                _lastCloudSaveTime = Time.unscaledTime;
-                _lastLocalSaveTime = Time.unscaledTime;
             }
         }
 
