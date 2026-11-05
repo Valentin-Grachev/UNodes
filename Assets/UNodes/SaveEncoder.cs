@@ -1,18 +1,66 @@
+using System;
 using System.Collections.Generic;
-using Unity.Plastic.Newtonsoft.Json;
+using UnityEngine;
 
 namespace UNodes.Project
 {
     public static class SaveEncoder
     {
+        [Serializable] private class DictionaryWrapper
+        {
+            public List<string> keys = new();
+            public List<string> values = new();
+        }
+
+
 
 
         public static Dictionary<string, string> Decode(string saveDataString)
-            => JsonConvert.DeserializeObject<Dictionary<string, string>>(saveDataString);
+        {
+            if (string.IsNullOrEmpty(saveDataString)) 
+                return new Dictionary<string, string>();
+
+            return JsonToDictionary(saveDataString);
+        }
 
 
         public static string Encode(Dictionary<string, string> saveData)
-            => JsonConvert.SerializeObject(saveData);
+            => DictionaryToJson(saveData);
+
+
+
+
+        private static string DictionaryToJson(Dictionary<string, string> dictionary)
+        {
+            var wrapper = new DictionaryWrapper();
+
+            foreach (var pair in dictionary)
+            {
+                wrapper.keys.Add(pair.Key);
+                wrapper.values.Add(pair.Value);
+            }
+
+            return JsonUtility.ToJson(wrapper);
+        }
+
+        private static Dictionary<string, string> JsonToDictionary(string json)
+        {
+            var wrapper = JsonUtility.FromJson<DictionaryWrapper>(json);
+            var dictionary = new Dictionary<string, string>();
+
+            if (wrapper == null || wrapper.keys == null || wrapper.values == null)
+                return dictionary;
+
+            for (int i = 0; i < Math.Min(wrapper.keys.Count, wrapper.values.Count); i++)
+                dictionary[wrapper.keys[i]] = wrapper.values[i];
+
+            return dictionary;
+        }
+
+
+
+
+
 
 
     }

@@ -46,47 +46,19 @@ namespace UNodes
             if (configuration == null)
                 throw new Exception($"[Startup] Configuration with key \"{configurationKey}\" doesn't exist!");
 
+
             Saves.SetLocalAutosaveTimeInterval(configuration.LocalAutosaveIntervalSec);
             Saves.SetCloudAutosaveTimeInterval(configuration.CloudAutosaveIntervalSec);
 
 
             int initProcessCount = 6;
 
-            bool paymentsIsInitialized = false;
-            bool savesIsInitialized = false;
-            bool envIsInitialized = false;
-
-            Env.InitializeProvider(configuration.EnvProvider, () =>
-            {
-                envIsInitialized = true;
-                TryInitializeGameTime();
-
-                OnProviderInitialized();
-            });
-
+            Env.InitializeProvider(configuration.EnvProvider, OnProviderInitialized);
             Ads.InitializeProvider(configuration.AdsProvider, OnProviderInitialized);
             Socials.InitializeProvider(configuration.SocialsProvider, OnProviderInitialized);
             GameReady.InitializeProvider(configuration.GameReadyProvider, OnProviderInitialized);
-
-            CloudSaves.InitializeProvider(configuration.CloudSavesProvider, () =>
-            {
-                Saves.InitializeSaveData();
-                
-                savesIsInitialized = true;
-
-                TryInitializeGameTime();
-                TryHandleNonHandledPayments();
-
-                OnProviderInitialized();
-            });
-
-            Payments.InitializeProvider(configuration.PaymentsProvider, () =>
-            {
-                paymentsIsInitialized = true;
-
-                TryHandleNonHandledPayments();
-                OnProviderInitialized();
-            });
+            CloudSaves.InitializeProvider(configuration.CloudSavesProvider, OnProviderInitialized);
+            Payments.InitializeProvider(configuration.PaymentsProvider, OnProviderInitialized);
 
 
             void OnProviderInitialized()
@@ -94,29 +66,30 @@ namespace UNodes
                 initProcessCount--;
                 if (initProcessCount == 0)
                 {
+                    OnAllProvidersInitialized();
                     IsInitialized = true;
                     OnInitialized?.Invoke();
                 }
             }
 
-
-            void TryInitializeGameTime()
-            {
-                if (savesIsInitialized && envIsInitialized)
-                    GameTime.Initialize(SaveData.SaveTime, Env.TimeNowUtc);
-            }
-
-            void TryHandleNonHandledPayments()
-            {
-                if (savesIsInitialized && paymentsIsInitialized && Payments.IsSupportPayments)
-                {
-                    var products = Payments.GetNonHandledProducts();
-
-                    if (products != null && products.Count > 0) 
-                        Payments.HandlePayments(products);
-                }
-            }
         }
+
+
+        private void OnAllProvidersInitialized()
+        {
+            Saves.InitializeSaveData();
+            GameTime.Initialize(SaveData.SaveTime, Env.TimeNowUtc);
+
+            if (Payments.IsSupportPayments)
+            {
+                var products = Payments.GetNonHandledProducts();
+
+                if (products != null && products.Count > 0)
+                    Payments.HandlePayments(products);
+            }
+
+        }
+
 
 
         private void FixedUpdate()

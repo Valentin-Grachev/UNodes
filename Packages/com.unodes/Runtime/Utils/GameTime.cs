@@ -5,13 +5,12 @@ namespace UNodes
 {
     public static class GameTime
     {
-        public delegate void OnTimePassedEvent(int seconds);
+        public delegate void OnTimePassedEvent(TimeSpan time);
 
-        public static event OnTimePassedEvent OnUnscaledTimePassed;
+        public static event OnTimePassedEvent OnTimePassed;
         public static event Action OnSecondTick;
 
         private static float _lastSecondPassTime = 0f;
-        private static float _lastUnscaledSecondPassTime = 0f;
         private static float _gameplayTimeScale = 1f;
         private static int _pauseCount = 0;
 
@@ -35,22 +34,19 @@ namespace UNodes
 
             OfflineTime = IsFirstEnter ? TimeSpan.Zero : timeNow - lastSaveTime;
             if (OfflineTime < TimeSpan.Zero) OfflineTime = TimeSpan.Zero;
+
+            _lastSecondPassTime = Time.unscaledTime;
         }
 
 
         public static void FixedUpdate()
         {
-            if (Time.unscaledTime - _lastUnscaledSecondPassTime > 1f)
-            {
-                int seconds = (int)(Time.unscaledTime - _lastUnscaledSecondPassTime);
-                _lastUnscaledSecondPassTime = Time.unscaledTime;
-
-                OnUnscaledTimePassed?.Invoke(seconds);
-            }
-
             if (Time.unscaledTime - _lastSecondPassTime > 1f)
             {
+                int seconds = (int)(Time.unscaledTime - _lastSecondPassTime);
                 _lastSecondPassTime = Time.unscaledTime;
+
+                OnTimePassed?.Invoke(TimeSpan.FromSeconds(seconds));
                 OnSecondTick?.Invoke();
             }
         }

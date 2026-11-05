@@ -44,7 +44,7 @@ namespace UNodes
 
         public static void Commit(Action<bool> onHandled = null)
         {
-            if (!Startup.IsInitialized || _savesIsDeleted) 
+            if (_savesIsDeleted) 
             { 
                 onHandled?.Invoke(false); 
                 return; 
@@ -55,16 +55,20 @@ namespace UNodes
             PlayerPrefs.SetString(SAVE_DATA_KEY, saveDataString);
             PlayerPrefs.Save();
 
-            CloudSaves.Commit(saveDataString, onHandled);
+            _lastLocalSaveTime = Time.unscaledTime;
 
-            _lastCloudSaveTime = Time.unscaledTime;
-            _cloudAutosaveTimeIntervalSec = Time.unscaledTime;
+            if (CloudSaves.IsSupportCloudSaves)
+            {
+                CloudSaves.Commit(saveDataString, onHandled);
+                _lastCloudSaveTime = Time.unscaledTime;
+            }
+            else onHandled?.Invoke(true);
         }
 
 
         public static void DeleteSaveData(Action<bool> onHandled)
         {
-            if (!Startup.IsInitialized || _savesIsDeleted) 
+            if (_savesIsDeleted) 
             { 
                 onHandled?.Invoke(false); 
                 return; 
@@ -72,22 +76,41 @@ namespace UNodes
 
             _savesIsDeleted = true;
 
-            PlayerPrefs.SetString(SAVE_DATA_KEY, string.Empty);
-            PlayerPrefs.Save();
-
             bool totalSuccess = true;
-            int deleteCount = 2;
+            int deleteCount = 0;
 
-            CloudSaves.DeleteSaveData(OnDeleted);
-            Payments.DeletePurchases(OnDeleted);
+            if (CloudSaves.IsSupportCloudSaves) deleteCount++;
+            if (Payments.IsSupportPayments) deleteCount++;
 
-            void OnDeleted(bool success)
+            if (deleteCount > 0)
             {
-                totalSuccess &= success;
-                deleteCount--;
+                if (CloudSaves.IsSupportCloudSaves)
+                    CloudSaves.DeleteSaveData(OnDeleted);
 
-                if (deleteCount == 0) 
-                    onHandled?.Invoke(totalSuccess);
+                if (Payments.IsSupportPayments)
+                    Payments.DeletePurchases(OnDeleted);
+
+                void OnDeleted(bool success)
+                {
+                    totalSuccess &= success;
+                    deleteCount--;
+
+                    if (deleteCount == 0)
+                    {
+                        PlayerPrefs.SetString(SAVE_DATA_KEY, string.Empty);
+                        PlayerPrefs.Save();
+
+                        onHandled?.Invoke(totalSuccess);
+                    }
+
+                }
+            }
+            else
+            {
+                PlayerPrefs.SetString(SAVE_DATA_KEY, string.Empty);
+                PlayerPrefs.Save();
+
+                onHandled?.Invoke(true);
             }
         }
 
@@ -106,7 +129,8 @@ namespace UNodes
                 _lastLocalSaveTime = Time.unscaledTime;
             }
 
-            if (Time.unscaledTime - _lastCloudSaveTime > _cloudAutosaveTimeIntervalSec)
+            if (CloudSaves.IsSupportCloudSaves && 
+                Time.unscaledTime - _lastCloudSaveTime > _cloudAutosaveTimeIntervalSec)
             {
                 var saveDataString = CreateSaveDataString();
                 CloudSaves.Commit(saveDataString);
