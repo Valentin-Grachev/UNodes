@@ -31,7 +31,6 @@ namespace UNodes
         private static bool _skipAds = false;
         private static Func<bool> _noAdsIsPurchased;
 
-        public static bool IsInitialized => _provider != null;
         public static bool IsSupportRewarded => _provider.IsSupportRewarded;
         public static bool IsSupportInterstitial => _provider.IsSupportInterstitial;
         public static bool IsAdBlock => _provider.IsAdBlock;

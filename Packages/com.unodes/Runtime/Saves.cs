@@ -1,12 +1,14 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
+using UNodes.Extensions;
 using UNodes.Project;
 
 namespace UNodes
 {
     public static class Saves
     {
-        private const string SAVE_DATA_KEY = "save_data";
+        private const string SAVE_DATA_KEY = "SaveData";
 
         private static bool _savesIsDeleted = false;
         private static float _lastLocalSaveTime = 0;
@@ -18,22 +20,32 @@ namespace UNodes
 
         public static void InitializeSaveData()
         {
-            var cloudSaveData = SaveEncoder.Decode(CloudSaves.GetSaveDataString());
             var localSaveData = SaveEncoder.Decode(PlayerPrefs.GetString(SAVE_DATA_KEY, string.Empty));
+            var saveData = localSaveData;
 
-            var cloudSaveTime = InternalSaveData.GetSaveTime(cloudSaveData);
-            var localSaveTime = InternalSaveData.GetSaveTime(localSaveData);
+            if (CloudSaves.IsSupportCloudSaves)
+            {
+                var cloudSaveData = SaveEncoder.Decode(CloudSaves.GetSaveDataString());
+                var cloudSaveTime = GetSaveTime(cloudSaveData);
+                var localSaveTime = GetSaveTime(localSaveData);
 
-            bool useCloudSaves = cloudSaveTime > localSaveTime;
-            var saveData = useCloudSaves ? cloudSaveData : localSaveData;
+                if (cloudSaveTime > localSaveTime) 
+                    saveData = cloudSaveData;
+            }
 
-            InternalSaveData.RestoreFromSaveData(saveData);
+            SaveData.RestoreFromSaveData(saveData);
             SaveData.RestoreFromSaveData(saveData);
         }
 
 
         public static void Commit(Action<bool> onHandled)
         {
+            if (!Startup.IsInitialized || _savesIsDeleted) 
+            { 
+                onHandled?.Invoke(false); 
+                return; 
+            }
+
             var saveDataString = CreateSaveDataString();
 
             PlayerPrefs.SetString(SAVE_DATA_KEY, saveDataString);
@@ -45,6 +57,14 @@ namespace UNodes
 
         public static void DeleteSaveData(Action<bool> onHandled)
         {
+            if (!Startup.IsInitialized || _savesIsDeleted) 
+            { 
+                onHandled?.Invoke(false); 
+                return; 
+            }
+
+            _savesIsDeleted = true;
+
             PlayerPrefs.SetString(SAVE_DATA_KEY, string.Empty);
             PlayerPrefs.Save();
 
@@ -65,9 +85,12 @@ namespace UNodes
         }
 
 
-        public static void Update()
+        public static void Update() => UpdateLocalAutosave();
+
+        private static void UpdateLocalAutosave()
         {
-            if (!_savesIsDeleted && Time.unscaledTime - _lastLocalSaveTime > _localSaveTimeIntervalSec)
+            if (Startup.IsInitialized && !_savesIsDeleted &&
+                Time.unscaledTime - _lastLocalSaveTime > _localSaveTimeIntervalSec)
             {
                 var saveDataString = CreateSaveDataString();
                 PlayerPrefs.SetString(SAVE_DATA_KEY, saveDataString);
@@ -76,15 +99,22 @@ namespace UNodes
             }
         }
 
+
         private static string CreateSaveDataString()
         {
+            SaveData.SaveTime = GameTime.UtcTime;
+
             var saveData = SaveData.GetSaveData();
 
-            foreach (var item in InternalSaveData.GetSaveData()) 
+            foreach (var item in SaveData.GetSaveData()) 
                 saveData.Add(item.Key, item.Value);
 
             return SaveEncoder.Encode(saveData);
         }
+
+
+        private static DateTime GetSaveTime(Dictionary<string, string> saveData)
+            => saveData.GetValueOrDefault(SaveData.SAVE_TIME_KEY, "0").SaveStringToDateTime();
 
 
     }

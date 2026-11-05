@@ -9,7 +9,6 @@ namespace UNodes
             public abstract bool IsSupportCloudSaves { get; }
             public abstract string GetSaveDataString();
             public abstract void Commit(string saveDataString, Action<bool> onHandled = null);
-            public abstract void DeleteSaveData(Action<bool> onHandled);
 
         }
 
@@ -22,7 +21,8 @@ namespace UNodes
                 onInitialized?.Invoke();
             });
 
-        public static bool IsInitialized => _provider != null;
+
+        public static bool IsSupportCloudSaves => _provider.IsSupportCloudSaves;
 
         public static string GetSaveDataString() => _provider.GetSaveDataString();
 
@@ -30,7 +30,7 @@ namespace UNodes
             => _provider.Commit(saveDataString, onHandled);
 
         public static void DeleteSaveData(Action<bool> onHandled) 
-            => _provider.DeleteSaveData(onHandled);
+            => _provider.Commit(string.Empty, onHandled);
 
     }
 

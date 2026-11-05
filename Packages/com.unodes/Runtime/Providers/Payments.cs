@@ -39,7 +39,6 @@ namespace UNodes
                 onInitialized?.Invoke();
             });
 
-        public static bool IsInitialized => _provider != null;
         public static bool IsSupportPayments => _provider.IsSupportPayments;
 
         public static string GetPriceText(ProductKey productKey) 
@@ -51,6 +50,9 @@ namespace UNodes
             {
                 _provider.Purchase(productKey, onHandled: (success) =>
                 {
+                    if (success) 
+                        PaymentHandler.ApplyPurchaseReward(productKey);
+
                     onHandled?.Invoke(success);
                     OnPaymentHandled?.Invoke(productKey, success);
                 });
@@ -65,6 +67,8 @@ namespace UNodes
             
         }
 
+        public static List<ProductKey> GetNonHandledProducts() 
+            => _provider.GetNonHandledProducts();
 
         public static void DeletePurchases(Action<bool> onHandled = null) 
             => _provider.DeletePurchases(onHandled);

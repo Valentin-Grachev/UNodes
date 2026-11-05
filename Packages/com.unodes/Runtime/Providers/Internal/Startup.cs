@@ -14,7 +14,9 @@ namespace UNodes
 
         [SerializeField] private EnvKey _editorConfigurationKey;
         [SerializeField] private EnvKey _buildConfigurationKey;
+        [Space]
         [SerializeField] private float _localSaveTimeIntervalSec = 1f;
+        [Space]
         [SerializeField] private List<ProviderConfiguration> _configurations;
 
 
@@ -32,16 +34,29 @@ namespace UNodes
                 (configuration => configuration.EnvProvider.EnvKey == configurationKey);
 
             int initProcessCount = 6;
+            bool paymentsIsInitialized = false;
+            bool savesIsInitialized = false;
 
             Env.InitializeProvider(configuration.EnvProvider, OnProviderInitialized);
             Ads.InitializeProvider(configuration.AdsProvider, OnProviderInitialized);
-            Payments.InitializeProvider(configuration.PaymentsProvider, OnProviderInitialized);
             Socials.InitializeProvider(configuration.SocialsProvider, OnProviderInitialized);
             GameReady.InitializeProvider(configuration.GameReadyProvider, OnProviderInitialized);
 
             CloudSaves.InitializeProvider(configuration.CloudSavesProvider, () =>
             {
                 Saves.InitializeSaveData();
+
+                savesIsInitialized = true;
+
+                TryHandleNonHandledPayments();
+                OnProviderInitialized();
+            });
+
+            Payments.InitializeProvider(configuration.PaymentsProvider, () =>
+            {
+                paymentsIsInitialized = true;
+
+                TryHandleNonHandledPayments();
                 OnProviderInitialized();
             });
 
@@ -56,6 +71,14 @@ namespace UNodes
                 }
             }
 
+            void TryHandleNonHandledPayments()
+            {
+                if (savesIsInitialized && paymentsIsInitialized && Payments.IsSupportPayments)
+                {
+                    foreach (var productKey in Payments.GetNonHandledProducts())
+                        PaymentHandler.ApplyPurchaseReward(productKey);
+                }
+            }
         }
 
     }

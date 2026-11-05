@@ -1,6 +1,6 @@
 {
     "name": "UNodes.SavesExtensions",
-    "rootNamespace": "UNodes.SavesExtensions",
+    "rootNamespace": "UNodes.Extensions",
     "references": [],
     "includePlatforms": [],
     "excludePlatforms": [],

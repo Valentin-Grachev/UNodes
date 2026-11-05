@@ -24,8 +24,6 @@ namespace UNodes
                 onInitialized?.Invoke();
             });
 
-        public static bool IsInitialized => _provider != null;
-
 
         public static bool IsEditor
         {

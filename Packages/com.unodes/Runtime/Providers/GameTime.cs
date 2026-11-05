@@ -15,6 +15,7 @@ namespace UNodes
         }
 
         public static DateTime UtcTime { get; private set; }
+        public static TimeSpan OfflineSeconds { get; private set; }
 
 
 

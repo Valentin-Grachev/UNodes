@@ -24,8 +24,6 @@ namespace UNodes
                 onInitialized?.Invoke();
             });
 
-        public static bool IsInitialized => _provider != null;
-
         public static void GameplayReady() => _provider.GameplayReady();
         public static void GameplayStart() => _provider.GameplayStart();
         public static void GameplayPause() => _provider.GameplayPause();

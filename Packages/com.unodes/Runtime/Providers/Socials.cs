@@ -24,7 +24,6 @@ namespace UNodes
                 onInitialized?.Invoke();
             });
 
-        public static bool IsInitialized => _provider != null;
         public static bool IsSupportInvite => _provider.IsSupportInvite;
         public static bool IsSupportRateGame => _provider.IsSupportRateGame;
 

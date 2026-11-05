@@ -2,6 +2,7 @@ namespace UNodes.Project
 {
     public enum EnvKey
     {
+        Missing = -1,
         Test = 0,
     }
 
