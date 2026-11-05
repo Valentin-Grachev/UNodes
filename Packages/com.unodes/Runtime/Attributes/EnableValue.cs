@@ -1,8 +1,8 @@
-using UnityEngine;
+using System;
 
 namespace UNodes
 {
-    public struct EnableValue<T> where T : MonoBehaviour
+    [Serializable] public struct EnableValue<T>
     {
         public bool enabled;
         public T value;

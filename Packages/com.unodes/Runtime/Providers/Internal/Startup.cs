@@ -15,9 +15,10 @@ namespace UNodes
         [SerializeField] private EnvKey _editorConfigurationKey;
         [SerializeField] private EnvKey _buildConfigurationKey;
         [Space]
-        [SerializeField] private float _localSaveTimeIntervalSec = 1f;
-        [Space]
         [SerializeField] private List<ProviderConfiguration> _configurations;
+
+        private const float INF = 10e6f;
+
 
 
         private void Awake() => Initialize();
@@ -25,19 +26,31 @@ namespace UNodes
 
         public void Initialize()
         {
-            Saves.SetLocalSaveTimeInterval(_localSaveTimeIntervalSec);
-
             var configurationKey = Env.IsEditor ? 
                 _editorConfigurationKey : _buildConfigurationKey;
 
             var configuration = _configurations.Find
                 (configuration => configuration.EnvProvider.EnvKey == configurationKey);
 
+
+            Saves.SetLocalAutosaveTimeInterval(configuration.LocalAutosaveIntervalSec);
+            Saves.SetCloudAutosaveTimeInterval(configuration.CloudAutosaveIntervalSec);
+
+
             int initProcessCount = 6;
+
             bool paymentsIsInitialized = false;
             bool savesIsInitialized = false;
+            bool envIsInitialized = false;
 
-            Env.InitializeProvider(configuration.EnvProvider, OnProviderInitialized);
+            Env.InitializeProvider(configuration.EnvProvider, () =>
+            {
+                envIsInitialized = true;
+                TryInitializeGameTime();
+
+                OnProviderInitialized();
+            });
+
             Ads.InitializeProvider(configuration.AdsProvider, OnProviderInitialized);
             Socials.InitializeProvider(configuration.SocialsProvider, OnProviderInitialized);
             GameReady.InitializeProvider(configuration.GameReadyProvider, OnProviderInitialized);
@@ -45,10 +58,12 @@ namespace UNodes
             CloudSaves.InitializeProvider(configuration.CloudSavesProvider, () =>
             {
                 Saves.InitializeSaveData();
-
+                
                 savesIsInitialized = true;
 
+                TryInitializeGameTime();
                 TryHandleNonHandledPayments();
+
                 OnProviderInitialized();
             });
 
@@ -71,15 +86,35 @@ namespace UNodes
                 }
             }
 
+
+            void TryInitializeGameTime()
+            {
+                if (savesIsInitialized && envIsInitialized)
+                    GameTime.Initialize(SaveData.SaveTime, Env.TimeNowUtc);
+            }
+
             void TryHandleNonHandledPayments()
             {
                 if (savesIsInitialized && paymentsIsInitialized && Payments.IsSupportPayments)
                 {
-                    foreach (var productKey in Payments.GetNonHandledProducts())
-                        PaymentHandler.ApplyPurchaseReward(productKey);
+                    var products = Payments.GetNonHandledProducts();
+
+                    if (products != null && products.Count > 0) 
+                        Payments.HandlePayments(products);
                 }
             }
         }
+
+        private void Update()
+        {
+            if (!IsInitialized) return;
+
+            Saves.Update();
+            GameTime.Update();
+        }
+
+
+
 
     }
 }

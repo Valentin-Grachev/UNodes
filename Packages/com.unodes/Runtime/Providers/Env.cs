@@ -13,6 +13,12 @@ namespace UNodes
             public abstract bool IsMobile { get; }
             public abstract bool IsDesktop { get; }
             public abstract SystemLanguage Language { get; }
+            public abstract DateTime ServerTimeNowUtc { get; }
+            public virtual float TimeScale 
+            { 
+                get => Time.timeScale;
+                set => Time.timeScale = value;
+            }
         }
 
         private static Provider _provider;
@@ -42,6 +48,13 @@ namespace UNodes
         public static bool IsMobile => _provider.IsMobile;
         public static bool IsDesktop => _provider.IsDesktop;
         public static SystemLanguage Language => _provider.Language;
+        public static DateTime TimeNowUtc => _provider.ServerTimeNowUtc;
+
+        public static float TimeScale
+        {
+            get => _provider.TimeScale;
+            set => _provider.TimeScale = value;
+        }
 
     }
 }

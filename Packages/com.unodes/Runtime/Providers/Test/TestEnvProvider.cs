@@ -18,6 +18,7 @@ namespace UNodes.Providers.Test
         public override bool IsMobile => _deviceType == DeviceType.Mobile;
         public override bool IsDesktop => _deviceType == DeviceType.Desktop;
         public override SystemLanguage Language => _language;
+        public override DateTime ServerTimeNowUtc => DateTime.UtcNow;
 
         public override void Initialize(Action onInitialized)
             => onInitialized?.Invoke();

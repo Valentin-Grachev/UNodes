@@ -18,6 +18,8 @@ namespace UNodes.Providers.Test
         public override string GetPriceText(ProductKey productKey)
             => $"Missing";
 
+        public override void HandleSuccessReward(ProductKey productKey) { }
+
         public override void Initialize(Action onInitialized)
             => onInitialized?.Invoke();
 

@@ -12,10 +12,15 @@ namespace UNodes
 
         private static bool _savesIsDeleted = false;
         private static float _lastLocalSaveTime = 0;
-        private static float _localSaveTimeIntervalSec;
+        private static float _lastCloudSaveTime = 0;
+        private static float _localAutosaveTimeIntervalSec = float.PositiveInfinity;
+        private static float _cloudAutosaveTimeIntervalSec = float.PositiveInfinity;
 
-        public static void SetLocalSaveTimeInterval(float seconds)
-            => _localSaveTimeIntervalSec = seconds;
+        public static void SetLocalAutosaveTimeInterval(float seconds)
+            => _localAutosaveTimeIntervalSec = seconds;
+
+        public static void SetCloudAutosaveTimeInterval(float seconds)
+            => _cloudAutosaveTimeIntervalSec = seconds;
 
 
         public static void InitializeSaveData()
@@ -38,7 +43,7 @@ namespace UNodes
         }
 
 
-        public static void Commit(Action<bool> onHandled)
+        public static void Commit(Action<bool> onHandled = null)
         {
             if (!Startup.IsInitialized || _savesIsDeleted) 
             { 
@@ -85,16 +90,25 @@ namespace UNodes
         }
 
 
-        public static void Update() => UpdateLocalAutosave();
+        public static void Update() => UpdateAutosave();
 
-        private static void UpdateLocalAutosave()
+        private static void UpdateAutosave()
         {
-            if (Startup.IsInitialized && !_savesIsDeleted &&
-                Time.unscaledTime - _lastLocalSaveTime > _localSaveTimeIntervalSec)
+            if (_savesIsDeleted) return;
+
+            if (Time.unscaledTime - _lastLocalSaveTime > _localAutosaveTimeIntervalSec)
             {
                 var saveDataString = CreateSaveDataString();
                 PlayerPrefs.SetString(SAVE_DATA_KEY, saveDataString);
                 PlayerPrefs.Save();
+                _lastLocalSaveTime = Time.unscaledTime;
+            }
+
+            if (Time.unscaledTime - _lastCloudSaveTime > _cloudAutosaveTimeIntervalSec)
+            {
+                var saveDataString = CreateSaveDataString();
+                CloudSaves.Commit(saveDataString);
+                _lastCloudSaveTime = Time.unscaledTime;
                 _lastLocalSaveTime = Time.unscaledTime;
             }
         }
@@ -102,12 +116,8 @@ namespace UNodes
 
         private static string CreateSaveDataString()
         {
-            SaveData.SaveTime = GameTime.UtcTime;
-
+            SaveData.SaveTime = Env.TimeNowUtc;
             var saveData = SaveData.GetSaveData();
-
-            foreach (var item in SaveData.GetSaveData()) 
-                saveData.Add(item.Key, item.Value);
 
             return SaveEncoder.Encode(saveData);
         }

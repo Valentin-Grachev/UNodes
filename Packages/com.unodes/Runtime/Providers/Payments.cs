@@ -15,6 +15,7 @@ namespace UNodes
             public abstract void Purchase(ProductKey productKey, Action<bool> onHandled);
             public abstract List<ProductKey> GetNonHandledProducts();
             public abstract void DeletePurchases(Action<bool> onHandled);
+            public abstract void HandleSuccessReward(ProductKey productKey);
         }
 
         public delegate void PaymentEvent(ProductKey productKey, bool success);
@@ -27,15 +28,6 @@ namespace UNodes
             => provider.Initialize(onInitialized: () =>
             {
                 _provider = provider;
-
-                var nonHandledProducts = _provider.GetNonHandledProducts();
-
-                if (nonHandledProducts != null)
-                {
-                    foreach (var productKey in _provider.GetNonHandledProducts())
-                        OnPaymentHandled?.Invoke(productKey, success: true);
-                }
-
                 onInitialized?.Invoke();
             });
 
@@ -51,7 +43,7 @@ namespace UNodes
                 _provider.Purchase(productKey, onHandled: (success) =>
                 {
                     if (success) 
-                        PaymentHandler.ApplyPurchaseReward(productKey);
+                        HandlePayments(new (){ productKey });      
 
                     onHandled?.Invoke(success);
                     OnPaymentHandled?.Invoke(productKey, success);
@@ -72,6 +64,21 @@ namespace UNodes
 
         public static void DeletePurchases(Action<bool> onHandled = null) 
             => _provider.DeletePurchases(onHandled);
+
+
+        public static void HandlePayments(List<ProductKey> productKeys)
+        {
+            foreach (var productKey in productKeys)
+                PaymentHandler.ApplyPurchaseReward(productKey);
+
+            Saves.Commit();
+
+            foreach (var productKey in productKeys)
+                _provider.HandleSuccessReward(productKey);      
+        }
+
+
+
 
     }
 }
