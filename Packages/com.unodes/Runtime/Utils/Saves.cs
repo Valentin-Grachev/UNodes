@@ -2,19 +2,31 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UNodes.Extensions;
-using UNodes.Project;
+using UNodes.Data;
 
 namespace UNodes
 {
+    public abstract class BaseSaveEncoder : MonoBehaviour
+    {
+        public abstract Dictionary<string, string> Decode(string saveDataString);
+        public abstract string Encode(Dictionary<string, string> saveData);
+    }
+
+
     public static class Saves
     {
         private const string SAVE_DATA_KEY = "SaveData";
 
+        private static BaseSaveEncoder _encoder;
         private static bool _savesIsDeleted = false;
         private static float _lastLocalSaveTime = 0;
         private static float _lastCloudSaveTime = 0;
         private static float _localAutosaveTimeIntervalSec = float.PositiveInfinity;
         private static float _cloudAutosaveTimeIntervalSec = float.PositiveInfinity;
+
+
+        public static void SetSaveEncoder(BaseSaveEncoder encoder)
+            => _encoder = encoder;
 
         public static void SetLocalAutosaveTimeInterval(float seconds)
             => _localAutosaveTimeIntervalSec = seconds;
@@ -25,12 +37,12 @@ namespace UNodes
 
         public static void InitializeSaveData()
         {
-            var localSaveData = SaveEncoder.Decode(PlayerPrefs.GetString(SAVE_DATA_KEY, string.Empty));
+            var localSaveData = _encoder.Decode(PlayerPrefs.GetString(SAVE_DATA_KEY, string.Empty));
             var saveData = localSaveData;
 
             if (CloudSaves.IsSupportCloudSaves)
             {
-                var cloudSaveData = SaveEncoder.Decode(CloudSaves.GetSaveDataString());
+                var cloudSaveData = _encoder.Decode(CloudSaves.GetSaveDataString());
                 var cloudSaveTime = GetSaveTime(cloudSaveData);
                 var localSaveTime = GetSaveTime(localSaveData);
 
@@ -54,7 +66,6 @@ namespace UNodes
 
             PlayerPrefs.SetString(SAVE_DATA_KEY, saveDataString);
             PlayerPrefs.Save();
-
             _lastLocalSaveTime = Time.unscaledTime;
 
             if (CloudSaves.IsSupportCloudSaves)
@@ -132,8 +143,7 @@ namespace UNodes
             if (CloudSaves.IsSupportCloudSaves && 
                 Time.unscaledTime - _lastCloudSaveTime > _cloudAutosaveTimeIntervalSec)
             {
-                var saveDataString = CreateSaveDataString();
-                CloudSaves.Commit(saveDataString);
+                Commit();
             }
         }
 
@@ -143,13 +153,17 @@ namespace UNodes
             SaveData.SaveTime = Env.TimeNowUtc;
             var saveData = SaveData.GetSaveData();
 
-            return SaveEncoder.Encode(saveData);
+            return _encoder.Encode(saveData);
         }
-
 
         private static DateTime GetSaveTime(Dictionary<string, string> saveData)
             => saveData.GetValueOrDefault(SaveData.SAVE_TIME_KEY, "0").SaveStringToDateTime();
 
 
     }
+
+
+
+
+
 }

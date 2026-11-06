@@ -1,10 +1,15 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UNodes.Project;
+using UNodes.Data;
 
 namespace UNodes
 {
+    public abstract class BasePaymentHandler : MonoBehaviour
+    {
+        public abstract void ApplyPurchaseReward(ProductKey productKey);
+    }
+
     public static class Payments
     {
         public abstract class Provider : CommonProvider
@@ -23,6 +28,11 @@ namespace UNodes
 
 
         private static Provider _provider;
+        private static BasePaymentHandler _paymentHandler;
+
+
+        public static void SetPaymentHandler(BasePaymentHandler paymentHandler) 
+            => _paymentHandler = paymentHandler;
 
         public static void InitializeProvider(Provider provider, Action onInitialized)
             => provider.Initialize(onInitialized: () =>
@@ -69,18 +79,20 @@ namespace UNodes
         public static void HandlePayments(List<ProductKey> productKeys)
         {
             foreach (var productKey in productKeys)
-                PaymentHandler.ApplyPurchaseReward(productKey);
+                _paymentHandler.ApplyPurchaseReward(productKey);
 
             Saves.Commit();
 
             foreach (var productKey in productKeys)
                 _provider.HandleSuccessReward(productKey);      
         }
-
-
-
-
     }
+
+
+    
+
+
+
 }
 
 

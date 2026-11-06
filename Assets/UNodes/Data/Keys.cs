@@ -1,4 +1,4 @@
-namespace UNodes.Project
+namespace UNodes.Data
 {
     public enum EnvKey
     {

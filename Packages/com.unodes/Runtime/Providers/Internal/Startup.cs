@@ -1,11 +1,13 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UNodes.Project;
+using UnityEngine.SceneManagement;
+using UNodes.Data;
 using UNodes.Providers;
 
 namespace UNodes
 {
+    [DefaultExecutionOrder(-10000)]
     public class Startup : MonoBehaviour
     {
         public static event Action OnInitialized;
@@ -15,6 +17,10 @@ namespace UNodes
 
         [SerializeField] private EnvKey _editorConfigurationKey;
         [SerializeField] private EnvKey _buildConfigurationKey;
+        [Space]
+        [SerializeField] private BaseHolderRegistrator _holderRegistrator;
+        [SerializeField] private BasePaymentHandler _paymentHandler;
+        [SerializeField] private BaseSaveEncoder _saveEncoder;
         [Space]
         [SerializeField] private List<ProviderConfiguration> _configurations;
 
@@ -27,6 +33,8 @@ namespace UNodes
                 Destroy(gameObject);
                 return;
             }
+
+            SetActiveRootGameObjects(false);
 
             DontDestroyOnLoad(gameObject);
             _startupIsCreated = true;
@@ -46,7 +54,7 @@ namespace UNodes
             if (configuration == null)
                 throw new Exception($"[Startup] Configuration with key \"{configurationKey}\" doesn't exist!");
 
-
+            Saves.SetSaveEncoder(_saveEncoder);
             Saves.SetLocalAutosaveTimeInterval(configuration.LocalAutosaveIntervalSec);
             Saves.SetCloudAutosaveTimeInterval(configuration.CloudAutosaveIntervalSec);
 
@@ -67,8 +75,7 @@ namespace UNodes
                 if (initProcessCount == 0)
                 {
                     OnAllProvidersInitialized();
-                    IsInitialized = true;
-                    OnInitialized?.Invoke();
+                    _holderRegistrator.RegisterItems(onRegistered: FinishInitialization);
                 }
             }
 
@@ -88,9 +95,27 @@ namespace UNodes
                     Payments.HandlePayments(products);
             }
 
+
+
+        }
+
+        private void FinishInitialization()
+        {
+            SetActiveRootGameObjects(true);
+
+            IsInitialized = true;
+            OnInitialized?.Invoke();
+
+            HolderManager.Start();
         }
 
 
+        private void Update()
+        {
+            if (!IsInitialized) return;
+
+            HolderManager.Update();
+        }
 
         private void FixedUpdate()
         {
@@ -98,8 +123,20 @@ namespace UNodes
 
             Saves.FixedUpdate();
             GameTime.FixedUpdate();
+            HolderManager.FixedUpdate();
         }
 
+
+
+        private void SetActiveRootGameObjects(bool active)
+        {
+            foreach (var rootObject in SceneManager.GetActiveScene().GetRootGameObjects())
+            {
+                if (rootObject != gameObject)
+                    rootObject.SetActive(active);
+            }
+
+        }
 
 
 

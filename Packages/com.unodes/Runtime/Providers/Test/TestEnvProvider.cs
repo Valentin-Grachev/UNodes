@@ -1,6 +1,6 @@
 using System;
 using UnityEngine;
-using UNodes.Project;
+using UNodes.Data;
 
 namespace UNodes.Providers.Test
 {

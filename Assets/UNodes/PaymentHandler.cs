@@ -1,8 +1,10 @@
+using UNodes.Data;
+
 namespace UNodes.Project
 {
-    public static class PaymentHandler
+    public class PaymentHandler :  BasePaymentHandler
     {
-        public static void ApplyPurchaseReward(ProductKey productKey)
+        public override void ApplyPurchaseReward(ProductKey productKey)
         {
             switch (productKey)
             {

@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace UNodes.Project
 {
-    public static class SaveEncoder
+    public class SaveEncoder : BaseSaveEncoder
     {
         [Serializable] private class DictionaryWrapper
         {
@@ -13,9 +13,7 @@ namespace UNodes.Project
         }
 
 
-
-
-        public static Dictionary<string, string> Decode(string saveDataString)
+        public override Dictionary<string, string> Decode(string saveDataString)
         {
             if (string.IsNullOrEmpty(saveDataString)) 
                 return new Dictionary<string, string>();
@@ -24,13 +22,13 @@ namespace UNodes.Project
         }
 
 
-        public static string Encode(Dictionary<string, string> saveData)
+        public override string Encode(Dictionary<string, string> saveData)
             => DictionaryToJson(saveData);
 
 
 
 
-        private static string DictionaryToJson(Dictionary<string, string> dictionary)
+        private string DictionaryToJson(Dictionary<string, string> dictionary)
         {
             var wrapper = new DictionaryWrapper();
 
@@ -43,7 +41,7 @@ namespace UNodes.Project
             return JsonUtility.ToJson(wrapper);
         }
 
-        private static Dictionary<string, string> JsonToDictionary(string json)
+        private Dictionary<string, string> JsonToDictionary(string json)
         {
             var wrapper = JsonUtility.FromJson<DictionaryWrapper>(json);
             var dictionary = new Dictionary<string, string>();
@@ -57,11 +55,6 @@ namespace UNodes.Project
             return dictionary;
         }
 
-
-
-
-
-
-
+        
     }
 }

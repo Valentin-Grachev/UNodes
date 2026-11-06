@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UNodes.Extensions;
 
-namespace UNodes.Project
+namespace UNodes.Data
 {
     public static class SaveData
     {
