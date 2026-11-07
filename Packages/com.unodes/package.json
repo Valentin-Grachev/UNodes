@@ -1,8 +1,9 @@
 {
   "name": "com.unodes",
   "displayName": "UNodes",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "author": {
     "name": "Valentin Grachev"
-  }
+  },
+  "unity": "2021.3"
 }
