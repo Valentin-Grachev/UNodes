@@ -11,6 +11,8 @@ namespace UNodes
         private System.Action<T> _objectPreprocessor;
 
 
+        public Transform Container => _container;
+
         public Pool(T poolObject, Transform container = null, System.Action<T> objectPreprocessor = null)
         {
             _objectPreprocessor = objectPreprocessor;
@@ -39,10 +41,8 @@ namespace UNodes
         }
 
 
-        public T Get(Transform container = null)
+        public T Get()
         {
-            if (container == null) container = _container;
-
             var poolObject = _poolObjects.Find(poolObject => !poolObject.gameObject.activeSelf);
 
             if (poolObject != null)
@@ -50,14 +50,14 @@ namespace UNodes
 
             else
             {
-                poolObject = Object.Instantiate(_prefab, container);
+                poolObject = Object.Instantiate(_prefab, _container);
                 poolObject.name = poolObject.name.Replace("[Prefab]", string.Empty);
                 poolObject.gameObject.SetActive(true);
                 _poolObjects.Add(poolObject);
             }
 
-            if (poolObject.transform.parent != container)
-                poolObject.transform.SetParent(container);
+            if (poolObject.transform.parent != _container)
+                poolObject.transform.SetParent(_container);
 
             _objectPreprocessor?.Invoke(poolObject);
 
@@ -70,7 +70,13 @@ namespace UNodes
                 Return(_poolObjects[i]);
         }
 
-        public void Return(T poolObject) => poolObject.gameObject.SetActive(false);
+        public void Return(T poolObject)
+        {
+            poolObject.gameObject.SetActive(false);
+
+            if (_container != null)
+                poolObject.transform.SetParent(_container);
+        }
 
 
 
