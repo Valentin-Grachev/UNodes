@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace UNodes
+namespace UNodes.Extensions
 {
     public static class Extensions
     {
