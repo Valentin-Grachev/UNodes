@@ -51,8 +51,6 @@ namespace UNodes
             }
         }
 
-
-
         public static void AddPause()
         {
             _pauseCount++;

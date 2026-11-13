@@ -1,8 +1,8 @@
 using System;
 
-namespace UNodes.Providers.Missing
+namespace UNodes.Providers.Default
 {
-    public class MissingAdsProvider : Ads.Provider
+    public class DefaultAdsProvider : Ads.Provider
     {
         public override bool IsSupportRewarded => false;
         public override bool IsSupportInterstitial => false;

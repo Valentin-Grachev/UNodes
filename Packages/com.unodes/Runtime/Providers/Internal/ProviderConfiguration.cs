@@ -1,6 +1,5 @@
 using UnityEngine;
-using UNodes.Providers.Missing;
-using UNodes.Providers.Test;
+using UNodes.Providers.Default;
 
 
 namespace UNodes.Providers
@@ -28,6 +27,7 @@ namespace UNodes.Providers
         [SerializeField] private EnableValue<Payments.Provider> _paymentsProvider;
         [SerializeField] private EnableValue<Socials.Provider> _socialsProvider;
         [SerializeField] private EnableValue<GameReady.Provider> _gameReadyProvider;
+        [SerializeField] private EnableValue<AudioSystem.Provider> _audioSystemProvider;
 
 
         public float LocalAutosaveIntervalSec => _localAutosaveIntervalSec.enabled ?
@@ -37,22 +37,25 @@ namespace UNodes.Providers
             _cloudAutosaveIntervalSec.value : float.PositiveInfinity;
 
         public Env.Provider EnvProvider => _envProvider.enabled ? 
-            _envProvider.value : GetOrCreateProvider<MissingEnvProvider>();
+            _envProvider.value : GetOrCreateProvider<DefaultEnvProvider>();
 
         public Ads.Provider AdsProvider => _adsProvider.enabled ? 
-            _adsProvider.value : GetOrCreateProvider<MissingAdsProvider>();
+            _adsProvider.value : GetOrCreateProvider<DefaultAdsProvider>();
 
         public Socials.Provider SocialsProvider => _socialsProvider.enabled ?
-            _socialsProvider.value : GetOrCreateProvider<MissingSocialsProvider>();
+            _socialsProvider.value : GetOrCreateProvider<DefaultSocialsProvider>();
 
         public Payments.Provider PaymentsProvider => _paymentsProvider.enabled ? 
-            _paymentsProvider.value : GetOrCreateProvider<MissingPaymentsProvider>();
+            _paymentsProvider.value : GetOrCreateProvider<DefaultPaymentsProvider>();
 
         public GameReady.Provider GameReadyProvider => _gameReadyProvider.enabled ?
-            _gameReadyProvider.value : GetOrCreateProvider<MissingGameReadyProvider>();
+            _gameReadyProvider.value : GetOrCreateProvider<DefaultGameReadyProvider>();
 
         public CloudSaves.Provider CloudSavesProvider => _cloudSavesProvider.enabled ? 
-            _cloudSavesProvider.value : GetOrCreateProvider<MissingCloudSavesProvider>();
+            _cloudSavesProvider.value : GetOrCreateProvider<DefaultCloudSavesProvider>();
+
+        public AudioSystem.Provider AudioSystemProvider => _audioSystemProvider.enabled ?
+            _audioSystemProvider.value : GetOrCreateProvider<DefaultAudioSystemProvider>();
 
 
 

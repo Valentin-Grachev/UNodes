@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using UNodes.Data;
 
 
-namespace UNodes.Providers.Missing
+namespace UNodes.Providers.Default
 {
-    public class MissingPaymentsProvider : Payments.Provider
+    public class DefaultPaymentsProvider : Payments.Provider
     {
         public override bool IsSupportPayments => false;
 

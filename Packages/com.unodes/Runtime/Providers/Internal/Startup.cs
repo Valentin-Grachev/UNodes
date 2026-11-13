@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UNodes.Data;
+using UNodes.Extensions;
 using UNodes.Providers;
 
 namespace UNodes
@@ -12,8 +13,10 @@ namespace UNodes
     {
         public static event Action OnInitialized;
         public static bool IsInitialized { get; private set; } = false;
+        public static Transform Container { get; private set; }
 
         private static bool _startupIsCreated = false;
+        
 
         [SerializeField] private EnvKey _editorConfigurationKey;
         [SerializeField] private EnvKey _buildConfigurationKey;
@@ -34,6 +37,8 @@ namespace UNodes
                 return;
             }
 
+            Container = transform;
+
             SetActiveRootGameObjects(false);
 
             DontDestroyOnLoad(gameObject);
@@ -48,18 +53,20 @@ namespace UNodes
             var configurationKey = Env.IsEditor ? 
                 _editorConfigurationKey : _buildConfigurationKey;
 
-            var configuration = _configurations.Find
-                (configuration => configuration.EnvProvider.EnvKey == configurationKey);
-
-            if (configuration == null)
-                throw new Exception($"[Startup] Configuration with key \"{configurationKey}\" doesn't exist!");
+            var configuration = Resources.Load<ProviderConfiguration>("DefaultConfiguration");
+            
+            if (configurationKey != EnvKey.Default)
+            {
+                _configurations.FindOrExeption
+                    (configuration => configuration.EnvProvider.EnvKey == configurationKey);
+            }
 
             Saves.SetSaveEncoder(_saveEncoder);
             Saves.SetLocalAutosaveTimeInterval(configuration.LocalAutosaveIntervalSec);
             Saves.SetCloudAutosaveTimeInterval(configuration.CloudAutosaveIntervalSec);
 
 
-            int initProcessCount = 6;
+            int initProcessCount = 7;
 
             Env.InitializeProvider(configuration.EnvProvider, OnProviderInitialized);
             Ads.InitializeProvider(configuration.AdsProvider, OnProviderInitialized);
@@ -67,6 +74,7 @@ namespace UNodes
             GameReady.InitializeProvider(configuration.GameReadyProvider, OnProviderInitialized);
             CloudSaves.InitializeProvider(configuration.CloudSavesProvider, OnProviderInitialized);
             Payments.InitializeProvider(configuration.PaymentsProvider, OnProviderInitialized);
+            AudioSystem.InitializeProvider(configuration.AudioSystemProvider, OnProviderInitialized);
 
 
             void OnProviderInitialized()

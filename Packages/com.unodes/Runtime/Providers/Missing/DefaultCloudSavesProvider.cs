@@ -1,8 +1,8 @@
 using System;
 
-namespace UNodes.Providers.Missing
+namespace UNodes.Providers.Default
 {
-    public class MissingCloudSavesProvider : CloudSaves.Provider
+    public class DefaultCloudSavesProvider : CloudSaves.Provider
     {
         public override bool IsSupportCloudSaves => false;
 

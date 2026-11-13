@@ -2,7 +2,7 @@ namespace UNodes.Data
 {
     public enum EnvKey
     {
-        Missing = -1,
+        Default = -1,
         Test = 0,
     }
 
@@ -15,5 +15,12 @@ namespace UNodes.Data
     {
         NoAds = 0,
     }
+
+    public enum TableKey
+    {
+        Default = 0,
+    }
+
+
 }
 

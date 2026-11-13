@@ -1,8 +1,8 @@
 using System;
 
-namespace UNodes.Providers.Missing
+namespace UNodes.Providers.Default
 {
-    public class MissingSocialsProvider : Socials.Provider
+    public class DefaultSocialsProvider : Socials.Provider
     {
         public override bool IsSupportInvite => false;
         public override bool IsSupportRateGame => false;

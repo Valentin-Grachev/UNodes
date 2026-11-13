@@ -1,8 +1,8 @@
 using System;
 
-namespace UNodes.Providers.Missing
+namespace UNodes.Providers.Default
 {
-    public class MissingGameReadyProvider : GameReady.Provider
+    public class DefaultGameReadyProvider : GameReady.Provider
     {
         public override void GameplayReady() { }
 
