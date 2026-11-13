@@ -220,10 +220,7 @@
       "version": "file:com.unodes",
       "depth": 0,
       "source": "embedded",
-      "dependencies": {
-        "com.dbrizov.naughtyattributes": "2.4.1",
-        "com.cysharp.unitask": "2.5.11"
-      }
+      "dependencies": {}
     },
     "com.unity.modules.ai": {
       "version": "1.0.0",
