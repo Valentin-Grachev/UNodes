@@ -221,7 +221,8 @@
       "depth": 0,
       "source": "embedded",
       "dependencies": {
-        "com.dbrizov.naughtyattributes": "2.4.1"
+        "com.dbrizov.naughtyattributes": "2.4.1",
+        "com.cysharp.unitask": "2.5.11"
       }
     },
     "com.unity.modules.ai": {
