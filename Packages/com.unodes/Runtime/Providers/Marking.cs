@@ -3,7 +3,7 @@ using System;
 
 namespace UNodes
 {
-    public static class GameReady
+    public static class Marking
     {
 
         public abstract class Provider : CommonProvider

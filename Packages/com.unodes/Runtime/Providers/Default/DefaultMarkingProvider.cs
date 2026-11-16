@@ -2,7 +2,7 @@ using System;
 
 namespace UNodes.Providers.Default
 {
-    public class DefaultGameReadyProvider : GameReady.Provider
+    public class DefaultMarkingProvider : Marking.Provider
     {
         public override void GameplayReady() { }
 

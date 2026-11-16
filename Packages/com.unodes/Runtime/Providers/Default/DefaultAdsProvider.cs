@@ -11,6 +11,8 @@ namespace UNodes.Providers.Default
         public override void Initialize(Action onInitialized) 
             => onInitialized?.Invoke();
 
+        public override void SetBanner(bool isActive) { }
+
         public override void ShowInterstitial(Action<bool> onHandled = null)
             => onHandled?.Invoke(false);
 

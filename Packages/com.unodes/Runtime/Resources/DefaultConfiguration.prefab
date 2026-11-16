@@ -13,10 +13,10 @@ GameObject:
   - component: {fileID: -2189369873419391057}
   - component: {fileID: 5454920455605645378}
   - component: {fileID: 7247498582867137923}
-  - component: {fileID: 2018059726827336760}
   - component: {fileID: 3221866394573163452}
   - component: {fileID: -1597778122276429747}
   - component: {fileID: -1337370854743092684}
+  - component: {fileID: 1727804107000682257}
   m_Layer: 0
   m_Name: DefaultConfiguration
   m_TagString: Untagged
@@ -57,6 +57,8 @@ MonoBehaviour:
   _cloudAutosaveIntervalSec:
     enabled: 0
     value: 0
+  <ShowBannerOnStart>k__BackingField: 0
+  <HideBannerIfNoAdsPurchased>k__BackingField: 0
   _envProvider:
     enabled: 0
     value: {fileID: 0}
@@ -72,7 +74,7 @@ MonoBehaviour:
   _socialsProvider:
     enabled: 0
     value: {fileID: 0}
-  _gameReadyProvider:
+  _markingProvider:
     enabled: 0
     value: {fileID: 0}
   _audioSystemProvider:
@@ -114,18 +116,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ed6ee7bc6141aee4cbdf3d49d1faecb9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &2018059726827336760
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4249358144862004071}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 307ee2928a7f81947a5a92c3e47b6ee6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &3221866394573163452
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -160,5 +150,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: accc5daf9f44f2844b12268b7c0c67dd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1727804107000682257
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4249358144862004071}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4c26b9b9c53778048acf0c0add664a32, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 

@@ -1,0 +1,9 @@
+{
+  "name": "com.unodes.yandex_games",
+  "displayName": "Yandex Games SDK (UNodes)",
+  "version": "1.0.0",
+  "author": {
+    "name": "Valentin Grachev"
+  },
+  "unity": "2021.3"
+}

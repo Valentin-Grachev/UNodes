@@ -84,7 +84,7 @@ namespace UNodes
             Saves.Commit();
 
             foreach (var productKey in productKeys)
-                _provider.HandleSuccessReward(productKey);      
+                _provider.HandleSuccessReward(productKey);
         }
     }
 

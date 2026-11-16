@@ -2,8 +2,9 @@ namespace UNodes.Data
 {
     public enum EnvKey
     {
-        Default = -1,
-        Test = 0,
+        Default,
+        Test,
+        YandexGames,
     }
 
     public enum AdKey

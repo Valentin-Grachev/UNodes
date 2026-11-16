@@ -16,6 +16,7 @@ namespace UNodes
         public static Transform Container { get; private set; }
 
         private static bool _startupIsCreated = false;
+        private static ProviderConfiguration _configuration;
         
 
         [SerializeField] private EnvKey _editorConfigurationKey;
@@ -53,28 +54,28 @@ namespace UNodes
             var configurationKey = Env.IsEditor ? 
                 _editorConfigurationKey : _buildConfigurationKey;
 
-            var configuration = Resources.Load<ProviderConfiguration>("DefaultConfiguration");
+            _configuration = Resources.Load<ProviderConfiguration>("DefaultConfiguration");
             
             if (configurationKey != EnvKey.Default)
             {
-                _configurations.FindOrExeption
+                _configuration = _configurations.FindOrExeption
                     (configuration => configuration.EnvProvider.EnvKey == configurationKey);
             }
 
             Saves.SetSaveEncoder(_saveEncoder);
-            Saves.SetLocalAutosaveTimeInterval(configuration.LocalAutosaveIntervalSec);
-            Saves.SetCloudAutosaveTimeInterval(configuration.CloudAutosaveIntervalSec);
+            Saves.SetLocalAutosaveTimeInterval(_configuration.LocalAutosaveIntervalSec);
+            Saves.SetCloudAutosaveTimeInterval(_configuration.CloudAutosaveIntervalSec);
 
 
             int initProcessCount = 7;
 
-            Env.InitializeProvider(configuration.EnvProvider, OnProviderInitialized);
-            Ads.InitializeProvider(configuration.AdsProvider, OnProviderInitialized);
-            Socials.InitializeProvider(configuration.SocialsProvider, OnProviderInitialized);
-            GameReady.InitializeProvider(configuration.GameReadyProvider, OnProviderInitialized);
-            CloudSaves.InitializeProvider(configuration.CloudSavesProvider, OnProviderInitialized);
-            Payments.InitializeProvider(configuration.PaymentsProvider, OnProviderInitialized);
-            AudioSystem.InitializeProvider(configuration.AudioSystemProvider, OnProviderInitialized);
+            Env.InitializeProvider(_configuration.EnvProvider, OnProviderInitialized);
+            Ads.InitializeProvider(_configuration.AdsProvider, OnProviderInitialized);
+            Socials.InitializeProvider(_configuration.SocialsProvider, OnProviderInitialized);
+            Marking.InitializeProvider(_configuration.MarkingProvider, OnProviderInitialized);
+            CloudSaves.InitializeProvider(_configuration.CloudSavesProvider, OnProviderInitialized);
+            Payments.InitializeProvider(_configuration.PaymentsProvider, OnProviderInitialized);
+            AudioSystem.InitializeProvider(_configuration.AudioSystemProvider, OnProviderInitialized);
 
 
             void OnProviderInitialized()
@@ -103,8 +104,17 @@ namespace UNodes
                     Payments.HandlePayments(products);
             }
 
+            bool needHideBanner = _configuration.HideBannerIfNoAdsPurchased && SaveData.NoAdsIsPurchased;
+            bool showBanner = _configuration.ShowBannerOnStart && !needHideBanner;
+            Ads.SetBanner(showBanner);
 
+            Payments.OnPaymentHandled += OnPaymentHandled;
+        }
 
+        private void OnPaymentHandled(ProductKey productKey, bool success)
+        {
+            if (success && productKey == ProductKey.NoAds && _configuration.HideBannerIfNoAdsPurchased)
+                Ads.SetBanner(false);
         }
 
         private void FinishInitialization()

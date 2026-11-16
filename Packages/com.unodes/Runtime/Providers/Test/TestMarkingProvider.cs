@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace UNodes.Providers.Test
 {
-    public class TestGameReadyProvider : GameReady.Provider
+    public class TestMarkingProvider : Marking.Provider
     {
         [SerializeField] private bool _showLogs = true;
 

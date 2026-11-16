@@ -18,6 +18,11 @@ namespace UNodes.Providers.Test
         public override void Initialize(Action onInitialized) 
             => onInitialized?.Invoke();
 
+        public override void SetBanner(bool isActive)
+        {
+            if (_showLogs) Debug.Log($"[TestAds] Set banner: {isActive}");
+        }
+
         public override void ShowInterstitial(Action<bool> onHandled = null)
         {
             bool success = !_simulateAdError;
@@ -25,7 +30,7 @@ namespace UNodes.Providers.Test
             if (_showLogs)
             {
                 string result = success ? "SUCCESS" : "ERROR";
-                Debug.Log($"[Ads] Show Interstitial: {result}");
+                Debug.Log($"[Test Ads] Show Interstitial: {result}");
             }
 
             onHandled?.Invoke(success);
@@ -38,7 +43,7 @@ namespace UNodes.Providers.Test
             if (_showLogs)
             {
                 string result = success ? "SUCCESS" : "ERROR";
-                Debug.Log($"[Ads] Show Rewarded: {result}");
+                Debug.Log($"[Test Ads] Show Rewarded: {result}");
             }
 
             onHandled?.Invoke(success);

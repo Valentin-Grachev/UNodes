@@ -5,7 +5,7 @@ namespace UNodes.Providers.Default
     public class DefaultSocialsProvider : Socials.Provider
     {
         public override bool IsSupportInvite => false;
-        public override bool IsSupportRateGame => false;
+        public override bool IsRateGameAvailable => false;
         public override bool IsSupportOpenUrl => false;
 
 
@@ -16,7 +16,8 @@ namespace UNodes.Providers.Default
 
         public override void OpenUrl(string url) { }
 
-        public override void RateGame() { }
+        public override void RateGame(Action<bool> onGameWasRated) 
+            => onGameWasRated?.Invoke(false);
 
     }
 }

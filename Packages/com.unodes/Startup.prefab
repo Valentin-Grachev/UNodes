@@ -47,8 +47,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8246ae7a1d77c8d41b22f5446b35b9ab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _editorConfigurationKey: -1
-  _buildConfigurationKey: -1
+  _editorConfigurationKey: 0
+  _buildConfigurationKey: 0
   _holderRegistrator: {fileID: 877702556334216801}
   _paymentHandler: {fileID: 877702556334216800}
   _saveEncoder: {fileID: 877702556334216803}

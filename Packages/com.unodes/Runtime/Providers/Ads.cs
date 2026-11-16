@@ -19,6 +19,7 @@ namespace UNodes
 
             public abstract void ShowRewarded(Action<bool> onHandled = null);
             public abstract void ShowInterstitial(Action<bool> onHandled = null);
+            public abstract void SetBanner(bool isActive);
         }
 
 
@@ -111,6 +112,9 @@ namespace UNodes
             }
 
         }
+
+        public static void SetBanner(bool isActive) => _provider.SetBanner(isActive);
+
 
     }
 }

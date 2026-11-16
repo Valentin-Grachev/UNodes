@@ -1,3 +1,4 @@
+using NaughtyAttributes;
 using UnityEngine;
 using UNodes.Providers.Default;
 
@@ -18,15 +19,19 @@ namespace UNodes.Providers
             value = 60f
         };
 
+        [field: SerializeField] public bool ShowBannerOnStart { get; private set; } = true;
+        [field: SerializeField] public bool HideBannerIfNoAdsPurchased { get; private set; } = true;
 
 
-        [Space(15)]
+
+
+        [HorizontalLine]
         [SerializeField] private EnableValue<Env.Provider> _envProvider;
         [SerializeField] private EnableValue<Ads.Provider> _adsProvider;
         [SerializeField] private EnableValue<CloudSaves.Provider> _cloudSavesProvider;
         [SerializeField] private EnableValue<Payments.Provider> _paymentsProvider;
         [SerializeField] private EnableValue<Socials.Provider> _socialsProvider;
-        [SerializeField] private EnableValue<GameReady.Provider> _gameReadyProvider;
+        [SerializeField] private EnableValue<Marking.Provider> _markingProvider;
         [SerializeField] private EnableValue<AudioSystem.Provider> _audioSystemProvider;
 
 
@@ -48,8 +53,8 @@ namespace UNodes.Providers
         public Payments.Provider PaymentsProvider => _paymentsProvider.enabled ? 
             _paymentsProvider.value : GetOrCreateProvider<DefaultPaymentsProvider>();
 
-        public GameReady.Provider GameReadyProvider => _gameReadyProvider.enabled ?
-            _gameReadyProvider.value : GetOrCreateProvider<DefaultGameReadyProvider>();
+        public Marking.Provider MarkingProvider => _markingProvider.enabled ?
+            _markingProvider.value : GetOrCreateProvider<DefaultMarkingProvider>();
 
         public CloudSaves.Provider CloudSavesProvider => _cloudSavesProvider.enabled ? 
             _cloudSavesProvider.value : GetOrCreateProvider<DefaultCloudSavesProvider>();

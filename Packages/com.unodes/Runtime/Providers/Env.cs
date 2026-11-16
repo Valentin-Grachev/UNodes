@@ -13,7 +13,7 @@ namespace UNodes
             public abstract bool IsMobile { get; }
             public abstract bool IsDesktop { get; }
             public abstract SystemLanguage Language { get; }
-            public abstract DateTime ServerTimeNowUtc { get; }
+            public abstract DateTime GetServerTime();
             public virtual float TimeScale 
             { 
                 get => Time.timeScale;
@@ -22,11 +22,14 @@ namespace UNodes
         }
 
         private static Provider _provider;
+        private static DateTime _initializedServerTime;
+        private static float _initializedUnscaledTime;
 
         public static void InitializeProvider(Provider provider, Action onInitialized)
             => provider.Initialize(() =>
             {
                 _provider = provider;
+                _initializedServerTime = _provider.GetServerTime();
                 onInitialized?.Invoke();
             });
 
@@ -48,7 +51,8 @@ namespace UNodes
         public static bool IsMobile => _provider.IsMobile;
         public static bool IsDesktop => _provider.IsDesktop;
         public static SystemLanguage Language => _provider.Language;
-        public static DateTime TimeNowUtc => _provider.ServerTimeNowUtc;
+        public static DateTime TimeNowUtc => _initializedServerTime 
+            + TimeSpan.FromSeconds(Time.unscaledTime - _initializedUnscaledTime);
 
         public static float TimeScale
         {
