@@ -17,7 +17,11 @@ namespace UNodes.Extensions
         public static DateTime SaveStringToDateTime(this string data)
             => new DateTime(long.Parse(data, CultureInfo.InvariantCulture));
 
+        public static string ToSaveString(this int value)
+            => value.ToString(CultureInfo.InvariantCulture);
 
+        public static int SaveStringToInt(this string data)
+            => int.Parse(data, CultureInfo.InvariantCulture);
 
 
     }
