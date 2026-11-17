@@ -15,7 +15,7 @@ namespace UNodes.Providers.Default
         public override string PlatformName => "Default";
         public override bool IsMobile => false;
         public override bool IsDesktop => true;
-        public override SystemLanguage Language => SystemLanguage.English;
+        public override Language DeviceLanguage => Language.English;
         
     }
 }

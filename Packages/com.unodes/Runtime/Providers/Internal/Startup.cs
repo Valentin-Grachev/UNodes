@@ -53,8 +53,6 @@ namespace UNodes
         {
             new ScreenState();
 
-
-
             var configurationKey = Env.IsEditor ? 
                 _editorConfigurationKey : _buildConfigurationKey;
 
@@ -97,6 +95,8 @@ namespace UNodes
 
         private void OnAllProvidersInitialized()
         {
+            Localization.Initialize(Env.DeviceLanguage);
+
             Saves.InitializeSaveData();
             GameTime.Initialize(SaveData.SaveTime, Env.TimeNowUtc);
 

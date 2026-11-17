@@ -2,7 +2,7 @@ using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 
-namespace UNodes
+namespace UNodes.Extensions
 {
     public static class AddressablesExtensions
     {

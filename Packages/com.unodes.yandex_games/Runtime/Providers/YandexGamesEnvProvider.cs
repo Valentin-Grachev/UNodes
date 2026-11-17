@@ -7,7 +7,7 @@ namespace UNodes.YandexGames
 {
     public class YandexGamesEnvProvider : Env.Provider
     {
-        private SystemLanguage _language;
+        private Language _deviceLanguage;
         private bool _isDesktop;
         private bool _gameIsPaused = false;
 
@@ -20,7 +20,7 @@ namespace UNodes.YandexGames
 
         public override bool IsDesktop => _isDesktop;
 
-        public override SystemLanguage Language => _language; 
+        public override Language DeviceLanguage => _deviceLanguage; 
 
         public override DateTime GetServerTime() 
             => YandexGamesSdk.GetServerTime();
@@ -39,7 +39,7 @@ namespace UNodes.YandexGames
             if (YandexGamesSdk.IsPaused) SetPause(true);
 
 
-            _language = ConvertToLanguage(YandexGamesSdk.GetLanguageCode());
+            _deviceLanguage = ConvertToLanguage(YandexGamesSdk.GetLanguageCode());
             _isDesktop = YandexGamesSdk.GetDeviceType() == "desktop";
 
             onInitialized?.Invoke();
@@ -57,53 +57,14 @@ namespace UNodes.YandexGames
         }
 
 
-        private SystemLanguage ConvertToLanguage(string code)
+        private Language ConvertToLanguage(string code)
         {
             return code?.ToLowerInvariant() switch
             {
-                "af" => SystemLanguage.Afrikaans,
-                "ar" => SystemLanguage.Arabic,
-                "eu" => SystemLanguage.Basque,
-                "be" => SystemLanguage.Belarusian,
-                "bg" => SystemLanguage.Bulgarian,
-                "ca" => SystemLanguage.Catalan,
-                "zh" => SystemLanguage.Chinese,
-                "zh-cn" => SystemLanguage.ChineseSimplified,
-                "zh-tw" => SystemLanguage.ChineseTraditional,
-                "cs" => SystemLanguage.Czech,
-                "da" => SystemLanguage.Danish,
-                "nl" => SystemLanguage.Dutch,
-                "en" => SystemLanguage.English,
-                "et" => SystemLanguage.Estonian,
-                "fo" => SystemLanguage.Faroese,
-                "fi" => SystemLanguage.Finnish,
-                "fr" => SystemLanguage.French,
-                "de" => SystemLanguage.German,
-                "el" => SystemLanguage.Greek,
-                "he" => SystemLanguage.Hebrew,
-                "hu" => SystemLanguage.Hungarian,
-                "is" => SystemLanguage.Icelandic,
-                "id" => SystemLanguage.Indonesian,
-                "it" => SystemLanguage.Italian,
-                "ja" => SystemLanguage.Japanese,
-                "ko" => SystemLanguage.Korean,
-                "lv" => SystemLanguage.Latvian,
-                "lt" => SystemLanguage.Lithuanian,
-                "no" => SystemLanguage.Norwegian,
-                "pl" => SystemLanguage.Polish,
-                "pt" => SystemLanguage.Portuguese,
-                "ro" => SystemLanguage.Romanian,
-                "ru" => SystemLanguage.Russian,
-                "sh" or "sr" => SystemLanguage.SerboCroatian,
-                "sk" => SystemLanguage.Slovak,
-                "sl" => SystemLanguage.Slovenian,
-                "es" => SystemLanguage.Spanish,
-                "sv" => SystemLanguage.Swedish,
-                "th" => SystemLanguage.Thai,
-                "tr" => SystemLanguage.Turkish,
-                "uk" => SystemLanguage.Ukrainian,
-                "vi" => SystemLanguage.Vietnamese,
-                _ => SystemLanguage.Unknown
+                "ru" => Language.Russian,
+                "en" => Language.English,
+
+                _ => Language.English
             };
         }
 
