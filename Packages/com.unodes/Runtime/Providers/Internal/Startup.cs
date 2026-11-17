@@ -51,6 +51,10 @@ namespace UNodes
 
         public void Initialize()
         {
+            new ScreenState();
+
+
+
             var configurationKey = Env.IsEditor ? 
                 _editorConfigurationKey : _buildConfigurationKey;
 
@@ -133,6 +137,7 @@ namespace UNodes
             if (!IsInitialized) return;
 
             HolderManager.Update();
+            ScreenState.Update();
         }
 
         private void FixedUpdate()
