@@ -25,6 +25,7 @@ namespace UNodes
         [SerializeField] private BaseHolderRegistrator _holderRegistrator;
         [SerializeField] private BasePaymentHandler _paymentHandler;
         [SerializeField] private BaseSaveEncoder _saveEncoder;
+        [SerializeField] private RectTransform _defaultViewerContainer;
         [Space]
         [SerializeField] private List<ProviderConfiguration> _configurations;
 
@@ -52,6 +53,7 @@ namespace UNodes
         public void Initialize()
         {
             new ScreenState();
+            ViewerSettings.SetDefaultContainer(_defaultViewerContainer);
 
             var configurationKey = Env.IsEditor ? 
                 _editorConfigurationKey : _buildConfigurationKey;
