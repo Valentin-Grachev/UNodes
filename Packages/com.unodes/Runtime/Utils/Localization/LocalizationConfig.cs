@@ -1,9 +1,24 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 
 namespace UNodes
 {
+    [Serializable] public struct LanguageValue
+    {
+        public Language language;
+        public string value;
+    }
+
+    [Serializable] public struct Translation
+    {
+        public string key;
+        public List<LanguageValue> values;
+    }
+
+
+
     [CreateAssetMenu(menuName = "UNodes/Localization", fileName = "Localization")]
     public class LocalizationConfig : ScriptableObject
     {
@@ -12,6 +27,10 @@ namespace UNodes
         [field: SerializeField] public List<Translation> Translations { get; private set; }
 
     }
+
+
+
+
 }
 
 
