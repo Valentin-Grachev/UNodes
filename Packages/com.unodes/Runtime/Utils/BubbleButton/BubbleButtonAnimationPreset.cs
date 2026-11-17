@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace UNodes
 {
-    [CreateAssetMenu(menuName = "DevNote/Extra/Bubble Button Animation", fileName = "BubbleButton")]
+    [CreateAssetMenu(menuName = "UNodes/Bubble Button Preset", fileName = "BubbleButton")]
     public class BubbleButtonAnimationPreset : ScriptableObject
     {
         [field: SerializeField] public AudioUnit ClickSound { get; private set; }
