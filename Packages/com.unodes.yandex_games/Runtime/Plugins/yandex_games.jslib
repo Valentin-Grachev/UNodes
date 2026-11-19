@@ -18,7 +18,11 @@ mergeInto(LibraryManager.library, {
   },
 
   _GetLanguageCode: function() {
-    return ConvertJsStringToUnityString(ysdk.environment.i18n.lang);
+    var value = ysdk.environment.i18n.lang || "";
+    var bufferSize = lengthBytesUTF8(value) + 1;
+    var buffer = _malloc(bufferSize);
+    stringToUTF8(value, buffer, bufferSize);
+    return buffer;
   },
 
   _GetServerTimeMillis: function() {
@@ -26,7 +30,11 @@ mergeInto(LibraryManager.library, {
   },
 
   _GetDeviceType: function() {
-    return ConvertJsStringToUnityString(ysdk.deviceInfo.type);
+    var value = ysdk.deviceInfo.type || "";
+    var bufferSize = lengthBytesUTF8(value) + 1;
+    var buffer = _malloc(bufferSize);
+    stringToUTF8(value, buffer, bufferSize);
+    return buffer;
   },
 
   _GameReady: function() {
