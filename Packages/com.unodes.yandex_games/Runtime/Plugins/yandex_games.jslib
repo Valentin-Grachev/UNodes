@@ -113,34 +113,35 @@ mergeInto(LibraryManager.library, {
   },
 
 
-  _RequestCanReview: async function() {
-  try {
-    const { value } = await ysdk.feedback.canReview();
-    unity.SendMessage('YandexGamesSDK', 'OnCanReviewHandled', value ? '1' : '0');
-  
-  } catch (e) {
-    console.log('canReview error:', e);
-    unity.SendMessage('YandexGamesSDK', 'OnCanReviewHandled', '0');
-  }
-},
+  _RequestCanReview: function() {
+    ysdk.feedback.canReview().then(function(result) {
+      unity.SendMessage('YandexGamesSDK', 'OnCanReviewHandled', result.value ? '1' : '0');
+    })
+    .catch(function(e) {
+      console.log('canReview error:', e);
+      unity.SendMessage('YandexGamesSDK', 'OnCanReviewHandled', '0');
+    });
+  },
 
 
-  _RequestReview: async function() {
-    try 
-    {
-      const { value } = await ysdk.feedback.canReview();
-      if (!value) {
+  _RequestReview: function() {
+    ysdk.feedback.canReview().then(function(result) {
+
+      if (!result.value) {
         unity.SendMessage('YandexGamesSDK', 'OnReviewHandled', '0');
         return;
       }
-      const { feedbackSent } = await ysdk.feedback.requestReview();
-      unity.SendMessage('YandexGamesSDK', 'OnReviewHandled', feedbackSent ? '1' : '0');
 
-    } catch (e) {
-      console.log('requestReview error:', e);
-      unity.SendMessage('YandexGamesSDK', 'OnReviewHandled', '0');
-    }
-  },
+      return ysdk.feedback.requestReview().then(function(reviewResult) {
+          unity.SendMessage('YandexGamesSDK', 'OnReviewHandled', reviewResult.feedbackSent ? '1' : '0');
+        });
+      })
+      .catch(function(e) {
+            console.log('requestReview error:', e);
+            unity.SendMessage('YandexGamesSDK', 'OnReviewHandled', '0');
+      });
+      
+    },
 
   _GameplayStart: function() {
     ysdk.features.GameplayAPI?.start();
