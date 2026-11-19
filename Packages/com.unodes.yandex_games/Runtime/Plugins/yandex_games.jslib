@@ -137,8 +137,8 @@ mergeInto(LibraryManager.library, {
         });
       })
       .catch(function(e) {
-            console.log('requestReview error:', e);
-            unity.SendMessage('YandexGamesSDK', 'OnReviewHandled', '0');
+        console.log('requestReview error:', e);
+        unity.SendMessage('YandexGamesSDK', 'OnReviewHandled', '0');
       });
 
     },
