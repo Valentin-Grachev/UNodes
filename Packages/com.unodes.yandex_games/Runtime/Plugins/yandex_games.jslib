@@ -140,15 +140,19 @@ mergeInto(LibraryManager.library, {
             console.log('requestReview error:', e);
             unity.SendMessage('YandexGamesSDK', 'OnReviewHandled', '0');
       });
-      
+
     },
 
   _GameplayStart: function() {
-    ysdk.features.GameplayAPI?.start();
+    if (ysdk.features.GameplayAPI) {
+      ysdk.features.GameplayAPI.start();
+    }
   },
 
   _GameplayStop: function() {
-    ysdk.features.GameplayAPI?.stop();
+    if (ysdk.features.GameplayAPI) {
+      ysdk.features.GameplayAPI.stop();
+    }
   },
 
 
