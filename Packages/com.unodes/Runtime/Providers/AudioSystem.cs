@@ -63,9 +63,9 @@ namespace UNodes
         }
 
 
-        public static async UniTask<AudioSource> Play(AudioUnit audioUnit)
+        public static AudioSource Play(AudioUnit audioUnit)
         {
-            var audioClip = await audioUnit.LoadAudioClip();
+            var audioClip = audioUnit.AudioClip;
 
             bool isSound = audioUnit.Channel == AudioUnit.ChannelType.Sound;
 

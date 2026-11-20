@@ -40,11 +40,12 @@ namespace UNodes
         {
             foreach (var audioSource in _busyAudioSources)
             {
-                if (!audioSource.isPlaying)
+                if (audioSource.clip == null || !audioSource.isPlaying)
                     _freeAudioSources.Push(audioSource);
             }
 
-            _busyAudioSources.RemoveAll(audioSource => !audioSource.isPlaying);
+            _busyAudioSources.RemoveAll(audioSource => 
+                audioSource.clip == null || !audioSource.isPlaying);
         }
 
 

@@ -1,8 +1,6 @@
 ﻿using Cysharp.Threading.Tasks;
 using NaughtyAttributes;
 using UnityEngine;
-using UnityEngine.AddressableAssets;
-using UNodes.Extensions;
 
 
 namespace UNodes
@@ -20,7 +18,7 @@ namespace UNodes
         [field: SerializeField] public bool IsLoop { get; private set; } = false;
 
         [field: Space(15)]
-        [field: SerializeField] public AssetReferenceT<AudioClip> AudioClipReference { get; private set; }
+        [field: SerializeField] public AudioClip AudioClip { get; private set; }
 
         [Space(15)]
         [SerializeField] private bool _useRandomVolume;
@@ -32,8 +30,6 @@ namespace UNodes
         [SerializeField, MinMaxSlider(0.1f, 3f), ShowIf(nameof(_useRandomPitch))] private Vector2 _randomPitch;
 
 
-        public async UniTask<AudioClip> LoadAudioClip() => await AudioClipReference.LoadAssetByKey();
-
         public float Volume => _useRandomVolume ?
             Random.Range(_randomVolume.x, _randomVolume.y) : _volume;
 
@@ -41,9 +37,7 @@ namespace UNodes
             Random.Range(_randomPitch.x, _randomPitch.y) : _pitch;
 
 
-        public void Play() => AudioSystem.Play(this).Forget();
-
-        public async UniTask<AudioSource> PlayAsync() => await AudioSystem.Play(this);
+        public AudioSource Play() => AudioSystem.Play(this);
 
 
         private void OnValidate()
