@@ -1,5 +1,6 @@
 using System;
 using Cysharp.Threading.Tasks;
+using GamePush;
 using UnityEngine;
 using UNodes.Data;
 
@@ -14,36 +15,41 @@ namespace UNodes.GamePush
 
         public override EnvKey EnvKey => EnvKey.GamePush;
 
-        public override string PlatformName => "YandexGames";
+        public override string PlatformName => "GamePush";
 
         public override bool IsMobile => !_isDesktop;
 
         public override bool IsDesktop => _isDesktop;
 
-        public override Language DeviceLanguage => _deviceLanguage; 
+        public override Language DeviceLanguage => _deviceLanguage;
 
-        public override DateTime GetServerTime() 
-            => YandexGamesSdk.GetServerTime();
+        public override DateTime GetServerTime()
+            => GP_Server.Time();
 
 
         public override async void Initialize(Action onInitialized)
         {
-            var sdkPrefab = Resources.Load<YandexGamesSdk>("YandexGamesSDK");
-            var sdkObject = Instantiate(sdkPrefab, parent: null);
-            sdkObject.name = "YandexGamesSDK";
-            DontDestroyOnLoad(sdkObject);
+            await UniTask.WaitUntil(() => GP_Init.isReady);
 
-            await UniTask.WaitUntil(() => YandexGamesSdk.IsInitialized);
+            GP_Game.OnPause += OnGamePause;
+            GP_Game.OnResume += OnGameResume;
+            if (GP_Game.IsPaused()) SetPause(true);
 
-            YandexGamesSdk.OnGameApiPauseChanged += () => SetPause(YandexGamesSdk.IsPaused);
-            if (YandexGamesSdk.IsPaused) SetPause(true);
-
-
-            _deviceLanguage = ConvertToLanguage(YandexGamesSdk.GetLanguageCode());
-            _isDesktop = YandexGamesSdk.GetDeviceType() == "desktop";
+            _deviceLanguage = ConvertToLanguage(GP_Language.CurrentISO());
+            _isDesktop = GP_Device.IsDesktop();
 
             onInitialized?.Invoke();
         }
+
+        private void OnDestroy()
+        {
+            GP_Game.OnPause -= OnGamePause;
+            GP_Game.OnResume -= OnGameResume;
+        }
+
+        private void OnGamePause() => SetPause(true);
+
+        private void OnGameResume() => SetPause(false);
 
         private void SetPause(bool isPaused)
         {
@@ -52,7 +58,7 @@ namespace UNodes.GamePush
             if (isPaused) GameTime.AddPause();
             else GameTime.RemovePause();
 
-            AudioListener.pause = YandexGamesSdk.IsPaused;
+            AudioListener.pause = isPaused;
             _gameIsPaused = isPaused;
         }
 
@@ -67,7 +73,5 @@ namespace UNodes.GamePush
                 _ => Language.English
             };
         }
-
-        
     }
 }
