@@ -22,7 +22,7 @@ namespace UNodes
         [SerializeField] private EnvKey _editorConfigurationKey;
         [SerializeField] private EnvKey _buildConfigurationKey;
         [Space]
-        [SerializeField] private BaseHolderRegistrator _holderRegistrator;
+        [SerializeField] private BaseBootstrap _controllerCreator;
         [SerializeField] private BasePaymentHandler _paymentHandler;
         [SerializeField] private BaseSaveEncoder _saveEncoder;
         [SerializeField] private RectTransform _defaultViewerContainer;
@@ -88,7 +88,7 @@ namespace UNodes
                 if (initProcessCount == 0)
                 {
                     OnAllProvidersInitialized();
-                    _holderRegistrator.RegisterItems(onRegistered: FinishInitialization);
+                    _controllerCreator.Run(onFinished: FinishInitialization);
                 }
             }
 
@@ -130,7 +130,7 @@ namespace UNodes
             IsInitialized = true;
             OnInitialized?.Invoke();
 
-            HolderManager.Start();
+            SingleManager.Start();
         }
 
 
@@ -138,7 +138,7 @@ namespace UNodes
         {
             if (!IsInitialized) return;
 
-            HolderManager.Update();
+            SingleManager.Update();
             ScreenState.Update();
         }
 
@@ -148,7 +148,7 @@ namespace UNodes
 
             Saves.FixedUpdate();
             GameTime.FixedUpdate();
-            HolderManager.FixedUpdate();
+            SingleManager.FixedUpdate();
         }
 
 

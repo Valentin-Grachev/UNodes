@@ -171,9 +171,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _editorConfigurationKey: 0
   _buildConfigurationKey: 2
-  _holderRegistrator: {fileID: 445785635}
+  _controllerCreator: {fileID: 445785635}
   _paymentHandler: {fileID: 445785634}
   _saveEncoder: {fileID: 445785633}
+  _defaultViewerContainer: {fileID: 0}
   _configurations:
   - {fileID: 6297692694013373271, guid: c10354ba442962a4a9f83f0e18a68645, type: 3}
 --- !u!114 &445785633
