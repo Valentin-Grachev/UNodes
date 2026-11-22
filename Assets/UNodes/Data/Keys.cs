@@ -5,6 +5,7 @@ namespace UNodes.Data
         Default,
         Test,
         YandexGames,
+        GamePush,
     }
 
     public enum AdKey

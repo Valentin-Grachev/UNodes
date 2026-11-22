@@ -1,0 +1,19 @@
+{
+    "name": "GamePushSDK (UNodes)",
+    "rootNamespace": "UNodes.YandexGames",
+    "references": [
+        "GUID:f51ebe6a0ceec4240a699833d6309b23",
+        "GUID:1e30580f5cdab81479d2c46e0988c446",
+        "GUID:abfe5084c75c341408d2e63df94b4487",
+        "GUID:e2c3782dc6445491e87d280768bacab5"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

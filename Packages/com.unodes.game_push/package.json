@@ -1,0 +1,8 @@
+{
+  "name": "com.unodes.game_push",
+  "displayName": "Game Push SDK (UNodes)",
+  "version": "1.0.0",
+  "author": {
+    "name": "Valentin Grachev"
+  }
+}

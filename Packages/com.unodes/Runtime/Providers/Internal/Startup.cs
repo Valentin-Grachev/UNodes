@@ -110,9 +110,11 @@ namespace UNodes
                     Payments.HandlePayments(products);
             }
 
-            bool needHideBanner = _configuration.HideBannerIfNoAdsPurchased && SaveData.NoAdsIsPurchased;
-            bool showBanner = _configuration.ShowBannerOnStart && !needHideBanner;
-            Ads.SetBanner(showBanner);
+            if (_configuration.ShowBannerOnStart)
+            {
+                bool needHideBanner = _configuration.HideBannerIfNoAdsPurchased && SaveData.NoAdsIsPurchased;
+                Ads.SetBanner(!needHideBanner);
+            }
 
             Payments.OnPaymentHandled += OnPaymentHandled;
         }
