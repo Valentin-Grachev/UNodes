@@ -70,6 +70,7 @@ namespace UNodes
             Saves.SetLocalAutosaveTimeInterval(_configuration.LocalAutosaveIntervalSec);
             Saves.SetCloudAutosaveTimeInterval(_configuration.CloudAutosaveIntervalSec);
 
+            Ads.SetInterstitialCooldown(_configuration.InterstitialCooldownSec);
 
             int initProcessCount = 7;
 

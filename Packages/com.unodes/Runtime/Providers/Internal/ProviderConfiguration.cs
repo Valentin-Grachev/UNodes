@@ -22,6 +22,7 @@ namespace UNodes.Providers
         [field: SerializeField] public bool ShowBannerOnStart { get; private set; } = true;
         [field: SerializeField] public bool HideBannerIfNoAdsPurchased { get; private set; } = true;
 
+        [field: SerializeField] public int InterstitialCooldownSec { get; private set; } = 60;
 
 
 

@@ -1,6 +1,6 @@
 {
     "name": "GamePushSDK (UNodes)",
-    "rootNamespace": "UNodes.YandexGames",
+    "rootNamespace": "UNodes.GamePush",
     "references": [
         "GUID:f51ebe6a0ceec4240a699833d6309b23",
         "GUID:1e30580f5cdab81479d2c46e0988c446",
