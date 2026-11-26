@@ -30,11 +30,8 @@ namespace UNodes.GamePush
 
         public override void ShowRewarded(Action<bool> onHandled = null)
         {
-            bool wasRewarded = false;
-
             GP_Ads.ShowRewarded(
-                onRewardedReward: (rewardName) => wasRewarded = true,
-                onRewardedClose: (success) => onHandled?.Invoke(wasRewarded));
+                onRewardedClose: (success) => onHandled?.Invoke(success));
         }
     }
 }
