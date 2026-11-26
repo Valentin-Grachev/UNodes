@@ -15,7 +15,7 @@ namespace UNodes.GamePush
         private bool _syncInProgress;
         private bool _commitQueued;
 
-        public override bool IsSupportCloudSaves => GP_Platform.IsSupportsCloudSaves();
+        public override bool IsSupportCloudSaves => true;
 
         public override string GetSaveDataString() => _saveData;
 
@@ -25,12 +25,6 @@ namespace UNodes.GamePush
 
             GP_Player.OnSyncComplete += OnSyncComplete;
             GP_Player.OnSyncError += OnSyncError;
-
-            if (!IsSupportCloudSaves)
-            {
-                onInitialized?.Invoke();
-                return;
-            }
 
             GP_Player.OnLoadComplete += OnLoaded;
             GP_Player.OnLoadError += OnLoadFailed;
