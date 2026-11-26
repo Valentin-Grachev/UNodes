@@ -134,6 +134,8 @@ namespace UNodes
             OnInitialized?.Invoke();
 
             SingleManager.Start();
+
+            Marking.GameplayReady();
         }
 
 
