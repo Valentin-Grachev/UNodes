@@ -26,30 +26,8 @@ namespace UNodes.GamePush
             GP_Player.OnSyncComplete += OnSyncComplete;
             GP_Player.OnSyncError += OnSyncError;
 
-            GP_Player.OnLoadComplete += OnLoaded;
-            GP_Player.OnLoadError += OnLoadFailed;
-            GP_Player.Load();
-
-            void OnLoaded()
-            {
-                Unsubscribe();
-                _saveData = ReadSaveData();
-                onInitialized?.Invoke();
-            }
-
-            void OnLoadFailed()
-            {
-                Unsubscribe();
-                Debug.LogError("[GamePush CloudSaves] Failed to load player data");
-                _saveData = ReadSaveData();
-                onInitialized?.Invoke();
-            }
-
-            void Unsubscribe()
-            {
-                GP_Player.OnLoadComplete -= OnLoaded;
-                GP_Player.OnLoadError -= OnLoadFailed;
-            }
+            _saveData = ReadSaveData();
+            onInitialized?.Invoke();
         }
 
         public override void Commit(string saveDataString, Action<bool> onHandled = null)
