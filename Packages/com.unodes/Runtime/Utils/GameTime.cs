@@ -23,7 +23,7 @@ namespace UNodes
             set
             {
                 _gameplayTimeScale = value;
-                if (_pauseCount == 0) Env.TimeScale = _gameplayTimeScale;
+                if (_pauseCount == 0) Time.timeScale = _gameplayTimeScale;
             }
         }
 
@@ -54,13 +54,13 @@ namespace UNodes
         public static void AddPause()
         {
             _pauseCount++;
-            Env.TimeScale = 0f;
+            Time.timeScale = 0f;
         }
 
         public static void RemovePause()
         {
             _pauseCount = Mathf.Max(0, _pauseCount - 1);
-            Env.TimeScale = _pauseCount == 0 ? _gameplayTimeScale : 0f;
+            Time.timeScale = _pauseCount == 0 ? _gameplayTimeScale : 0f;
         }
 
 

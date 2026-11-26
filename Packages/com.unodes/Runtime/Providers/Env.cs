@@ -14,11 +14,6 @@ namespace UNodes
             public abstract bool IsDesktop { get; }
             public abstract Language DeviceLanguage { get; }
             public abstract DateTime GetServerTime();
-            public virtual float TimeScale 
-            { 
-                get => Time.timeScale;
-                set => Time.timeScale = value;
-            }
         }
 
         private static Provider _provider;
@@ -53,12 +48,6 @@ namespace UNodes
         public static Language DeviceLanguage => _provider.DeviceLanguage;
         public static DateTime TimeNowUtc => _initializedServerTime 
             + TimeSpan.FromSeconds(Time.unscaledTime - _initializedUnscaledTime);
-
-        public static float TimeScale
-        {
-            get => _provider.TimeScale;
-            set => _provider.TimeScale = value;
-        }
 
     }
 }
